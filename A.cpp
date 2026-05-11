@@ -9,6 +9,14 @@ struct Node
     int x, y, cost;
 };
 
+struct Compare
+{
+    bool operator()(pair<int, Node> a, pair<int, Node> b)
+    {
+        return a.first > b.first;
+    }
+};
+
 int heuristic(int x, int y, int gx, int gy)
 {
     return abs(gx - x) + abs(gy - y);
@@ -16,7 +24,9 @@ int heuristic(int x, int y, int gx, int gy)
 
 int main()
 {
-    priority_queue<pair<int, Node>> pq;
+    priority_queue<pair<int, Node>,
+                   vector<pair<int, Node>>,
+                   Compare> pq;
 
     int goalX = 2;
     int goalY = 2;
@@ -40,7 +50,7 @@ int main()
         {
             int h = heuristic(current.x + 1, current.y, goalX, goalY);
 
-            pq.push({-(current.cost + h),
+            pq.push({current.cost + h,
                     {current.x + 1, current.y, current.cost + 1}});
         }
 
@@ -48,7 +58,7 @@ int main()
         {
             int h = heuristic(current.x, current.y + 1, goalX, goalY);
 
-            pq.push({-(current.cost + h),
+            pq.push({current.cost + h,
                     {current.x, current.y + 1, current.cost + 1}});
         }
     }
